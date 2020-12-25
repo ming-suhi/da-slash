@@ -16,7 +16,14 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xlyr-on/da-slash"
+    "url": "git+https://github.com/xlyr-on/da-slash.git"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/xlyr-on/da-slash/issues"
+  },
+  "homepage": "https://github.com/xlyr-on/da-slash#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
