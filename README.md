@@ -42,7 +42,8 @@ client.once('ready', () => {
 })
 
 //emitted when a slash command is detected
-client.ws.on('INTERACTION_CREATE', async interaction => {
+client.ws.on('INTERACTION_CREATE', async request => {
+  const interaction = new Slash.Interaction(client, request);
   //finds the appropriate slash command and executes it
   slash.matchCommand(interaction); 
 })
@@ -61,25 +62,42 @@ new Slash.Command(data);
 ###### description - description of command
 ###### permissions - required permissions to execute command
 ###### options - options for command
-###### execute - function to be executed, will not be executed if permissions are not met and sends an ephemeral message
+###### execute - function to be executed, will not be executed if permissions are not met
 #### usage
 ```javascript
 commandOne.js
 module.exports = new Slash.Command({
   name: 'hello',
-  description: 'sends ',
+  description: 'sends a hello world message',
   permissions: ["SEND_MESSAGES"],
-  execute(client, interaction) {
+  execute(interaction) {
   
-    // sends "Hello World!"
-    client.api.interactions(interaction.id, interaction.token).callback.post({
-      data: {
-        type: 4,
-        data: {
-          content: "Hello World!"
-        }
-      }
-    });
+    interaction.sendMessage("Hello World")
+    
+  }
+})
+```
+
+
+## Slash Interaction
+#### constructor
+```javascript
+new Slash.Interaction(discord_client, interaction)
+```
+#### methods
+###### .sendMessage(content) - sends a message
+###### .sendEphemeral(content) - sends an ephemeral(user-visible only) message
+###### .sendEmbed(discord_embed) - sends an embed
+#### usage
+```javascript
+commandTwo.js
+module.exports = new Slash.Command({
+  name: 'invisible',
+  description: 'sends a hello world message visible to user only',
+  permissions: ["SEND_MESSAGES"],
+  execute(interaction) {
+  
+    interaction.sendEphemeral("Hello World")
     
   }
 })
