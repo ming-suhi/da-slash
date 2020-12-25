@@ -1,15 +1,20 @@
 const fs = require('fs');
+
 class Client {
   constructor(client, config) {
+    this.client = client;
     this.config = config;
   }
+
   getCommands = () => {
     const dir = this.config.commands.directory;
     const subcategories = this.config.commands.subcategories;
     let map = new Map();
     switch (subcategories) {
+
       case "true":
         fs.readdirSync(dir).forEach(folder => {
+
           fs.readdirSync(dir + '/' + folder).forEach(file => {
             let File = require(`${dir}/${folder}/${file}`);
             map.set(File.name, File.data);
@@ -17,6 +22,7 @@ class Client {
         });
         return map;
         break;
+
       case "false":
         fs.readdirSync(dir).forEach(file => {
           let File = require(`${dir}/${file}`);
@@ -25,12 +31,17 @@ class Client {
         return map;
     }
   };
-  matchCommand = (client, interaction) => {
+
+  matchCommand = (interaction) => {
+    const client = this.client;
     const dir = this.config.commands.directory;
     const subcategories = this.config.commands.subcategories;
+
     switch (subcategories) {
+
       case "true":
         fs.readdirSync(dir).forEach(folder => {
+
           fs.readdirSync(`${dir}/${folder}`).forEach(file => {
             if (file !== 'index.js') {
               let File = require(`${dir}/${folder}/${file}`);
@@ -39,6 +50,7 @@ class Client {
           })
         })
         break;
+
       case "false":
         fs.readdirSync(dir).forEach(file => {
           if (file !== 'index.js') {
@@ -48,7 +60,9 @@ class Client {
         })
     }
   }
-  postCommands = (client) => {
+
+  postCommands = () => {
+    const client = this.client;
     client.guilds.cache.forEach(guild => {
       this.getCommands().forEach(command => {
         client.api.applications(client.user.id).guilds(guild.id).commands.post({
@@ -61,10 +75,13 @@ class Client {
       })
     })
   }
-  deleteCommand = (client, guild, commandID) => {
+
+  deleteCommand = (guild, commandID) => {
+    const client = this.client;
     client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
   }
 }
+
 class Command {
   constructor(data) {
     this.name = data.name;
@@ -78,6 +95,7 @@ class Command {
       }
     })
   }
+
   permissionCheck = (user) => {
     return new Promise ((resolve, reject) => {
       const missingPermissions = (this.data.permissions || ['SEND_MESSAGES']).filter(p => !user.hasPermission(p))
@@ -88,6 +106,7 @@ class Command {
       }
     })
   }
+
   securityCheck = (client, interaction) => {
     const command = interaction.data;
     const guild = client.guilds.cache.get(interaction.guild_id);
@@ -111,5 +130,6 @@ class Command {
     })
   }
 }
+
 exports.Client = Client;
 exports.Command = Command;
