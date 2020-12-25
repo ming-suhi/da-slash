@@ -2,7 +2,6 @@ const fs = require('fs');
 
 class Client {
   constructor(client, config) {
-    this.client = client;
     this.config = config;
   }
 
@@ -104,7 +103,7 @@ class Command {
     })
   }
 
-  securityCheck = (client, interaction) => {
+  securityCheck = (interaction) => {
     const command = interaction.data;
     const guild = client.guilds.cache.get(interaction.guild_id);
     
