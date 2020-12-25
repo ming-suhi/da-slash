@@ -16,7 +16,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xlyr-on/da-slash.git"
+    "url": "git://github.com/xlyr-on/da-slash.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
