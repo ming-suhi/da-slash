@@ -1,6 +1,9 @@
 # da-slash
 Creating and managing Discord Slash Commands made simple
 
+[![Github License](https://img.shields.io/github/license/xlyr-on/da-slash)](https://img.shields.io/github/license/)
+[![Github Issues](https://img.shields.io/github/issues/xlyr-on/da-slash)](https://img.shields.io/github/issues/)
+
 ## Slash Client
 #### constructor 
 ```javascript
