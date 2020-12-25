@@ -18,6 +18,9 @@
     "type": "git",
     "url": "git+https://github.com/xlyr-on/da-slash.git"
   },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
   "dependencies": {},
   "bugs": {
     "url": "https://github.com/xlyr-on/da-slash/issues"
