@@ -64,21 +64,20 @@ class Client {
   postCommands = () => {
     const client = this.client;
     client.guilds.cache.forEach(guild => {
-      try {
-        this.getCommands().forEach(command => {
-          client.api.applications(client.user.id).guilds(guild.id).commands.post({
-            data: {
-              name: command.name,
-              description: command.description,
-              options: command.options
-            }
-          });
-        })
-      } catch (err) {
-        console.log("ERROR | Application missing guild access");
-        console.log("Commands not updated to guild : " + guild.name);
-      }
+      this.getCommands().forEach(command => {
 
+        client.api.applications(client.user.id).guilds(guild.id).commands.post({
+          data: {
+            name: command.name,
+            description: command.description,
+            options: command.options
+          }
+        }).catch(() => {
+          console.log("Error | Missing guild permission");
+          console.log("Commands not updated to guild: " + guild.name)
+        });
+
+      })
     })
   }
 
