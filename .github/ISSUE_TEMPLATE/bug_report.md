@@ -10,11 +10,11 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Name of class and/or function producing the error
-3. See script producing the error
-2. The error being produced
+### Name of class and/or function producing the error
+``` 
+See script producing the error
+```
+The error being produced
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
