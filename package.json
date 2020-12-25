@@ -1,5 +1,5 @@
 {
-  "name": "da-slash",
+  "name": "@xlyr-on/da-slash",
   "version": "1.1.2",
   "description": "Creating and managing discord slash commands made simple",
   "main": "index.js",
