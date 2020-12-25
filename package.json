@@ -1,6 +1,6 @@
 {
   "name": "da-slash",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Creating and managing discord slash commands made simple",
   "main": "src/index.js",
   "keywords": [
