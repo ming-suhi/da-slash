@@ -1,8 +1,8 @@
 {
-  "name": "@xlyr-on/da-slash",
+  "name": "da-slash",
   "version": "1.1.2",
   "description": "Creating and managing discord slash commands made simple",
-  "main": "index.js",
+  "main": "src/index.js",
   "keywords": [
     "npm",
     "npm-discord-slash-commands",
@@ -16,10 +16,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git://github.com/xlyr-on/da-slash.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "url": "git+https://github.com/xlyr-on/da-slash.git"
   },
   "dependencies": {},
   "bugs": {
