@@ -8,9 +8,9 @@ new Slash.Client(discord_client, config);
 ```
 #### methods
 ###### .getCommands() - Returns a map of commands
-###### .postCommands(client) - Posts/updates all commands
-###### .deleteCommand(client, guild, command_id_here) - Deletes chosen command from a certain guild
-###### .matchCommand(client, interaction) - runs through all commands and executes match
+###### .postCommands(discord_client) - Posts/updates all commands
+###### .deleteCommand(discord_client, guild, command_id_here) - Deletes chosen command from a certain guild
+###### .matchCommand(discord_client, interaction) - runs through all commands and executes match
 #### usage
 ```javascript
 index.js
