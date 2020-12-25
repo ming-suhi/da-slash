@@ -8,9 +8,9 @@ new Slash.Client(discord_client, config);
 ```
 #### methods
 ###### .getCommands() - Returns a map of commands
-###### .postCommands() - Posts/updates all commands
-###### .deleteCommand(guild, command_id_here) - Deletes chosen command from a certain guild
-###### .matchCommand(interaction) - runs through all commands and executes match
+###### .postCommands(client) - Posts/updates all commands
+###### .deleteCommand(client, guild, command_id_here) - Deletes chosen command from a certain guild
+###### .matchCommand(client, interaction) - runs through all commands and executes match
 #### usage
 ```javascript
 index.js
@@ -31,17 +31,17 @@ const slash = new Slash.Client(client, config);
 
 client.once('ready', () => {
   //updates Commands
-  slash.postCommands();
+  slash.postCommands(client);
   
   //deletes Command
   let guild = client.guilds.cache.get(guild_id_here);
-  slash.deleteCommand(guild, command_id_here)
+  slash.deleteCommand(client, guild, command_id_here)
 })
 
 //emitted when a slash command is detected
 client.ws.on('INTERACTION_CREATE', async interaction => {
   //finds the appropriate slash command and executes it
-  slash.matchCommand(interaction); 
+  slash.matchCommand(client, interaction); 
 })
 
 client.login(config.bot.token);

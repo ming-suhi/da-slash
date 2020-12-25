@@ -32,8 +32,7 @@ class Client {
     }
   };
 
-  matchCommand = (interaction) => {
-    const client = this.client;
+  matchCommand = (client, interaction) => {
     const dir = this.config.commands.directory;
     const subcategories = this.config.commands.subcategories;
 
@@ -61,8 +60,7 @@ class Client {
     }
   }
 
-  postCommands = () => {
-    const client = this.client;
+  postCommands = (client) => {
     client.guilds.cache.forEach(guild => {
       this.getCommands().forEach(command => {
         client.api.applications(client.user.id).guilds(guild.id).commands.post({
@@ -76,8 +74,7 @@ class Client {
     })
   }
 
-  deleteCommand = (guild, commandID) => {
-    const client = this.client;
+  deleteCommand = (client, guild, commandID) => {
     client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
   }
 }
