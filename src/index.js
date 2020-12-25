@@ -2,6 +2,7 @@ const fs = require('fs');
 
 class Client {
   constructor(client, config) {
+    this.client = client;
     this.config = config;
   }
 
@@ -31,7 +32,8 @@ class Client {
     }
   };
 
-  matchCommand = (client, interaction) => {
+  matchCommand = (interaction) => {
+    const client = this.client;
     const dir = this.config.commands.directory;
     const subcategories = this.config.commands.subcategories;
 
@@ -59,21 +61,29 @@ class Client {
     }
   }
 
-  postCommands = (client) => {
+  postCommands = () => {
+    const client = this.client;
     client.guilds.cache.forEach(guild => {
-      this.getCommands().forEach(command => {
-        client.api.applications(client.user.id).guilds(guild.id).commands.post({
-          data: {
-            name: command.name,
-            description: command.description,
-            options: command.options
-          }
-        });
-      })
+      try {
+        this.getCommands().forEach(command => {
+          client.api.applications(client.user.id).guilds(guild.id).commands.post({
+            data: {
+              name: command.name,
+              description: command.description,
+              options: command.options
+            }
+          });
+        })
+      } catch (err) {
+        console.log("ERROR | Application missing guild access");
+        console.log("Commands not updated to guild : " + guild.name);
+      }
+
     })
   }
 
-  deleteCommand = (client, guild, commandID) => {
+  deleteCommand = (guild, commandID) => {
+    const client = this.client;
     client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
   }
 }
@@ -83,7 +93,7 @@ class Command {
     this.name = data.name;
     this.data = data;
   }
-  
+
   expressionCheck = (command) => {
     return new Promise((resolve, reject) => {
       if (command.name === this.data.name) {
@@ -93,9 +103,9 @@ class Command {
   }
 
   permissionCheck = (user) => {
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const missingPermissions = (this.data.permissions || ['SEND_MESSAGES']).filter(p => !user.hasPermission(p))
-      if(missingPermissions.length === 0) {
+      if (missingPermissions.length === 0) {
         resolve(this.data.execute);
       } else {
         reject(missingPermissions)
@@ -103,23 +113,23 @@ class Command {
     })
   }
 
-  securityCheck = (interaction) => {
+  securityCheck = (client, interaction) => {
     const command = interaction.data;
     const guild = client.guilds.cache.get(interaction.guild_id);
-    
+
     const user = guild.members.fetch(interaction.member.user.id).then(user => {
       this.expressionCheck(command).then(() => {
         this.permissionCheck(user).then(execute => {
-        execute(client, interaction);
+          execute(client, interaction);
         }, permissions => {
           client.api.interactions(interaction.id, interaction.token).callback.post({
-          data: {
-            type: 3,
             data: {
-              content: `You are missing permissions to run this command: \`${permissions.join(' | ').replace(/_/g, ' ')}\``,
-              flags: 64
+              type: 3,
+              data: {
+                content: `You are missing permissions to run this command: \`${permissions.join(' | ').replace(/_/g, ' ')}\``,
+                flags: 64
+              }
             }
-          }
           })
         }).catch(console.error)
       }).catch(console.error)
