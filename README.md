@@ -29,8 +29,7 @@ client.once('ready', () => {
   slash.postCommands();
   
   //deletes Command
-  let guild = client.guilds.cache.get(guild_id_here);
-  slash.deleteCommand(guild, command_id_here)
+  slash.deleteCommand(guild_id_here, command_id_here)
 })
 
 client.on('guildCreate', guild => {
