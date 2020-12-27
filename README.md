@@ -1,22 +1,14 @@
-# da-slash
-Creating and managing Discord Slash Commands made simple
-
-[![Github License](https://img.shields.io/github/license/xlyr-on/da-slash)](https://img.shields.io/github/license/)
-[![Github Issues](https://img.shields.io/github/issues/xlyr-on/da-slash)](https://img.shields.io/github/issues/)
-
-## Slash Client
-#### constructor 
-```javascript
-new Slash.Client(discord_client, config);
+# Quick Setup
+## Installation
+##### Run npm install on command line or terminal.
 ```
-#### methods
-###### .getCommands() - Returns a map of commands
-###### .postCommands() - Posts/updates all commands
-###### .deleteCommand(guild, command_id_here) - Deletes chosen command from a certain guild
-###### .matchCommand(interaction) - runs through all commands and executes match
-#### usage
+npm install da-slash
+```
+## Initialization
+##### Set up bot and listen for commands.
 ```javascript
 index.js
+
 const config = {
 "commands": {
     "directory": "/path/to/commands", //path to commands folder
@@ -41,68 +33,53 @@ client.once('ready', () => {
   slash.deleteCommand(guild, command_id_here)
 })
 
+client.on('guildCreate', guild => {
+  //refreshes Commands to show changes at new guild
+  slash.postCommands();
+})
+
 //emitted when a slash command is detected
 client.ws.on('INTERACTION_CREATE', async request => {
   const interaction = new Slash.Interaction(client, request);
-  //finds the appropriate slash command and executes it
+  //finds the matching slash command and executes it
   slash.matchCommand(interaction); 
 })
 
 client.login(config.bot.token);
 ```
 
-
-## Slash Command
-#### constructor 
-```javascript
-new Slash.Command(data);
-```
-#### data
-###### name - name of command
-###### description - description of command
-###### permissions - required permissions to execute command
-###### options - options for command
-###### execute - function to be executed, will not be executed if permissions are not met
-#### usage
+## Creating Commands
+##### A file for each command. All files should be contained in one folder or if files are separated by folders, all command folders should be under one command folder. 
 ```javascript
 commandOne.js
+
+const Slash = require('da-slash');
 module.exports = new Slash.Command({
-  name: 'hello',
-  description: 'sends a hello world message',
+  name: 'echo',
+  description: 'sends a message',
   permissions: ["SEND_MESSAGES"],
+  options: [{
+    "name": "content",
+    "description": "message the bot will send",
+    "type": 3 // Type 3 is string
+  }]
   execute(interaction) {
-  
-    interaction.sendMessage("Hello World")
-    
+    // access discord.Client() through interaction.client
+    const client = interaction.client;
+    // access the data related to the slash command emitted
+    const request = interaction.request;
+    // access the arguments passed
+    const content = request.data.options.find(arg => arg.name === "content").value;
+    // sends message containing the argument
+    interaction.sendMessage(content);
   }
 })
 ```
 
+## Resources
 
-## Slash Interaction
-#### constructor
-```javascript
-new Slash.Interaction(discord_client, interaction)
-```
-#### methods
-###### .sendMessage(content) - sends a message
-###### .sendEphemeral(content) - sends an ephemeral(user-visible only) message
-###### .sendEmbed(discord_embed) - sends an embed
-#### usage
-```javascript
-commandTwo.js
-module.exports = new Slash.Command({
-  name: 'invisible',
-  description: 'sends a hello world message visible to user only',
-  permissions: ["SEND_MESSAGES"],
-  execute(interaction) {
-  
-    interaction.sendEphemeral("Hello World")
-    
-  }
-})
-```
+[da-slash Documentation](https://github.com/xlyr-on/da-slash/wiki)
 
-
-## More Resources
 [Discord Slash Commands Documentation](https://discord.com/developers/docs/interactions/slash-commands)
+
+[Discord.js Documentation](https://discord.js.org/#/docs/main/stable/general/welcome)

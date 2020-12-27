@@ -6,7 +6,7 @@ class Client {
     this.config = config;
   }
 
-  getCommands = () => {
+  get commands() {
     const dir = this.config.commands.directory;
     const subcategories = this.config.commands.subcategories;
     let map = new Map();
@@ -63,8 +63,7 @@ class Client {
   postCommands = () => {
     const client = this.client;
     client.guilds.cache.forEach(guild => {
-      this.getCommands().forEach(command => {
-
+      this.commands.forEach(command => {
         client.api.applications(client.user.id).guilds(guild.id).commands.post({
           data: {
             name: command.name,
@@ -80,9 +79,9 @@ class Client {
     })
   }
 
-  deleteCommand = (guild, commandID) => {
+  deleteCommand = (guild_id, commandID) => {
     const client = this.client;
-    client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
+    client.api.applications(client.user.id).guilds(guild_id).commands(commandID).delete();
   }
 }
 
