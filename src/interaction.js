@@ -7,7 +7,8 @@ class Interaction {
     async sendMessage(content, command) {
       const client = this.client;
       const request = this.request;
-      const type = command.responseType;
+      const type = command.responseType
+        || 4;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
@@ -21,7 +22,8 @@ class Interaction {
     async sendEphemeral(content, command) {
       const client = this.client;
       const request = this.request;
-      const type = command.responseType;
+      const type = command.responseType
+        || 4;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
@@ -36,7 +38,8 @@ class Interaction {
     async sendEmbed(embed, command) {
       const client = this.client;
       const request = this.request;
-      const type = command.responseType;
+      const type = command.responseType
+        || 4;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
