@@ -2,13 +2,12 @@ class Interaction {
     constructor(client, request) {
       this.client = client;
       this.request = request;
-      this.responseType = 4;
     }
     
-    async sendMessage(content) {
+    async sendMessage(content, command) {
       const client = this.client;
       const request = this.request;
-      const type = this.responseType;
+      const type = command.responseType;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
@@ -19,10 +18,10 @@ class Interaction {
       });
     }
   
-    async sendEphemeral(content) {
+    async sendEphemeral(content, command) {
       const client = this.client;
       const request = this.request;
-      const type = this.responseType;
+      const type = command.responseType;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
@@ -34,10 +33,10 @@ class Interaction {
       });
     }
   
-    async sendEmbed(embed) {
+    async sendEmbed(embed, command) {
       const client = this.client;
       const request = this.request;
-      const type = this.responseType;
+      const type = command.responseType;
       client.api.interactions(request.id, request.token).callback.post({
         data: {
           type: type,
