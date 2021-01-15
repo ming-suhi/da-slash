@@ -57,12 +57,12 @@ module.exports = new Slash.Command({
   name: 'echo',
   description: 'sends a message',
   permissions: ["SEND_MESSAGES"],
-  responseType: 4 // Type 4 responds with a message, showing the user's input (https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype)
+  responseType: 4, // Type 4 responds with a message, showing the user's input (https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype)
   options: [{
     "name": "content",
     "description": "message the bot will send",
     "type": 3 // Type 3 is string
-  }]
+  }],
   execute(interaction) {
     // access discord.Client() through interaction.client
     const client = interaction.client;
