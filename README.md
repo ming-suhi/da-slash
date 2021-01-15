@@ -57,6 +57,7 @@ module.exports = new Slash.Command({
   name: 'echo',
   description: 'sends a message',
   permissions: ["SEND_MESSAGES"],
+  responseType: 4 // Type 4 responds with a message, showing the user's input (https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype)
   options: [{
     "name": "content",
     "description": "message the bot will send",
@@ -70,7 +71,7 @@ module.exports = new Slash.Command({
     // access the arguments passed
     const content = request.data.options.find(arg => arg.name === "content").value;
     // sends message containing the argument
-    interaction.sendMessage(content);
+    interaction.sendMessage(content, this);
   }
 })
 ```
