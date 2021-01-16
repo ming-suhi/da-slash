@@ -6,83 +6,113 @@ class Client {
     this.config = config;
   }
 
-  get commands() {
+  async commands() {
     const dir = this.config.commands.directory;
+    const folder = fs.readdirSync(dir);
     const subcategories = this.config.commands.subcategories;
-    let map = new Map();
+    let commands = new Map();
     switch (subcategories) {
 
       case "true":
-        fs.readdirSync(dir).forEach(folder => {
-
-          fs.readdirSync(dir + '/' + folder).forEach(file => {
-            let File = require(`${dir}/${folder}/${file}`);
-            map.set(File.name, File.data);
-          });
-        });
-        return map;
+        for (let subfolderRef of folder) {
+          const subfolder = fs.readdirSync(`${dir}/${subfolderRef}`);
+          for (let file of subfolder) {
+            if (file === "index.js") return;
+            let command = require(`${dir}/${folder}/${file}`);
+            commands.set(command.name, command);
+          }
+        }
+        return commands;
         break;
 
       case "false":
-        fs.readdirSync(dir).forEach(file => {
-          let File = require(`${dir}/${file}`);
-          map.set(File.name, File.data);
-        });
-        return map;
+        for (let file of folder) {
+          let command = require(`${dir}/${file}`);
+          commands.set(command.name, command);
+        }
+        return commands;
     }
   };
-
-  matchCommand = (interaction) => {
+  
+  async findCommand(command_name) {
     const dir = this.config.commands.directory;
+    const folder = fs.readdirSync(dir);
     const subcategories = this.config.commands.subcategories;
-
+    let map = new Array();
     switch (subcategories) {
 
       case "true":
-        fs.readdirSync(dir).forEach(folder => {
-
-          fs.readdirSync(`${dir}/${folder}`).forEach(file => {
-            if (file !== 'index.js') {
-              let File = require(`${dir}/${folder}/${file}`);
-              File.securityCheck(interaction);
+        for(let subfolderRef of folder) {
+          const subfolder = fs.readdirSync(`${dir}/${subfolderRef}`);
+          for (let file of subfolder) {
+            if (file === "index.js") return;
+            let command = require(`${dir}/${subfolderRef}/${file}`);
+            let expressionCheck = await command.expressionCheck(command_name);
+            if (expressionCheck.pass){
+              map.push(command)
             }
-          })
-        })
+          }
+        }
         break;
 
       case "false":
-        fs.readdirSync(dir).forEach(file => {
-          if (file !== 'index.js') {
-            let File = require(`${dir}/${file}`);
-            File.securityCheck(interaction);
+        for (let file of folder) {
+          if (file === "index.js") return;
+          let command = require(`${dir}/${file}`);
+          let expressionCheck = await command.expressionCheck(command_name);
+          if (expressionCheck.pass){
+            map.push(command)
           }
-        })
+        }
+    }
+    return map[0];
+  }
+
+  async matchCommand(interaction){
+    const command = await this.findCommand(interaction.request.data.name);
+    const securityCheck = await command.securityCheck(interaction);
+    switch (securityCheck.pass) {
+      case true:
+      command.execute(interaction);
+      return {...command, securityCheck: "pass"};
+      break;
+    
+      case false:
+      const user = await interaction.author();
+      const missingPermissions = (this.permissions || ['SEND_MESSAGES']).filter(p => !user.hasPermission(p));
+      interaction.responseType = 3;
+      interaction.sendEphemeral(`You are missing permissions to run this command: \`${permissionCheck.missingPermissions.join(' | ').replace(/_/g, ' ')}\``);
+      return {...command, securityCheck: "pass"};
     }
   }
 
-  postCommands = () => {
+  async postCommands() {
     const client = this.client;
+    let commands = await this.commands();
     client.guilds.cache.forEach(guild => {
-      this.commands.forEach(command => {
+      commands.forEach(command => {
         client.api.applications(client.user.id).guilds(guild.id).commands.post({
           data: {
             name: command.name,
             description: command.description,
             options: command.options
           }
-        }).catch(() => {
-          console.log("Error | Missing guild permission");
-          console.log("Commands not updated to guild: " + guild.name)
+        }).catch((err) => {
+          console.log(new Error("slash 001: Missing guild permission | Command Format Wrong" + "\nCommand not updated to guild: " + guild.name + "[guild] | " + command.name + "[command]"));
         });
-
       })
     })
   }
 
-  deleteCommand = (guild_id, commandID) => {
+  async deleteCommand(commandID) {
     const client = this.client;
-    client.api.applications(client.user.id).guilds(guild_id).commands(commandID).delete();
+    client.guilds.cache.forEach(guild => {
+      client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
+    })
+    return commandID;
   }
+
+
 }
 
 module.exports = Client;

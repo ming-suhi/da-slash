@@ -61,7 +61,7 @@ module.exports = new Slash.Command({
     "name": "content",
     "description": "message the bot will send",
     "type": 3 // Type 3 is string
-  }]
+  }],
   execute(interaction) {
     // access discord.Client() through interaction.client
     const client = interaction.client;
