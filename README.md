@@ -53,7 +53,7 @@ client.login(config.bot.token);
 commandOne.js
 
 const Slash = require('da-slash');
-module.exports = new Slash.Command({
+module.exports = new Slash.GlobalCommand({
   name: 'echo',
   description: 'sends a message',
   permissions: ["SEND_MESSAGES"],
@@ -74,7 +74,20 @@ module.exports = new Slash.Command({
   }
 })
 ```
+```javascript
+commandTwo.js
 
+const Slash = require('da-slash');
+module.exports = new Slash.GuildCommand({
+  name: 'hello',
+  description: 'sends a hello message',
+  guilds: ["GuildIdHere"]
+  permissions: ["SEND_MESSAGES"],
+  execute(interaction) {
+    interaction.sendMessage("hello");
+  }
+})
+```
 ## Resources
 
 [da-slash Documentation](https://github.com/xlyr-on/da-slash/wiki)
