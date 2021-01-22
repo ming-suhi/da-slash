@@ -87,32 +87,12 @@ class Client {
   }
 
   async postCommands() {
-    const client = this.client;
     let commands = await this.commands();
-    client.guilds.cache.forEach(guild => {
-      commands.forEach(command => {
-        client.api.applications(client.user.id).guilds(guild.id).commands.post({
-          data: {
-            name: command.name,
-            description: command.description,
-            options: command.options
-          }
-        }).catch((err) => {
-          console.log(new Error("slash 001: Missing guild permission | Command Format Wrong" + "\nCommand not updated to guild: " + guild.name + "[guild] | " + command.name + "[command]"));
-        });
-      })
-    })
+    for (let command of commands) {
+      command[1].post(this.client)
+    }
+    return commands;
   }
-
-  async deleteCommand(commandID) {
-    const client = this.client;
-    client.guilds.cache.forEach(guild => {
-      client.api.applications(client.user.id).guilds(guild.id).commands(commandID).delete();
-    })
-    return commandID;
-  }
-
-
 }
 
 module.exports = Client;
