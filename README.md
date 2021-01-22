@@ -1,4 +1,3 @@
-# Quick Setup
 ## Installation
 ##### Run npm install on command line or terminal.
 ```
@@ -26,14 +25,6 @@ const slash = new Slash.Client(client, config);
 
 client.once('ready', () => {
   //updates Commands
-  slash.postCommands();
-  
-  //deletes Command
-  slash.deleteCommand(guild_id_here, command_id_here)
-})
-
-client.on('guildCreate', guild => {
-  //refreshes Commands to show changes at new guild
   slash.postCommands();
 })
 
@@ -81,7 +72,7 @@ const Slash = require('da-slash');
 module.exports = new Slash.GuildCommand({
   name: 'hello',
   description: 'sends a hello message',
-  guilds: ["GuildIdHere"]
+  guilds: ["GuildIdHere"],
   permissions: ["SEND_MESSAGES"],
   execute(interaction) {
     interaction.sendMessage("hello");
