@@ -18,7 +18,7 @@ class Client {
           const subfolder = fs.readdirSync(`${dir}/${subfolderRef}`);
           for (let file of subfolder) {
             if (file === "index.js") return;
-            let command = require(`${dir}/${folder}/${file}`);
+            let command = require.main.require(`${dir}/${folder}/${file}`);
             commands.set(command.name, command);
           }
         }
@@ -27,7 +27,7 @@ class Client {
 
       case "false":
         for (let file of folder) {
-          let command = require(`${dir}/${file}`);
+          let command = require.main.require(`${dir}/${file}`);
           commands.set(command.name, command);
         }
         return commands;
@@ -46,7 +46,7 @@ class Client {
           const subfolder = fs.readdirSync(`${dir}/${subfolderRef}`);
           for (let file of subfolder) {
             if (file === "index.js") return;
-            let command = require(`${dir}/${subfolderRef}/${file}`);
+            let command = require.main.require(`${dir}/${subfolderRef}/${file}`);
             let expressionCheck = await command.expressionCheck(command_name);
             if (expressionCheck.pass){
               map.push(command)
@@ -58,7 +58,7 @@ class Client {
       case "false":
         for (let file of folder) {
           if (file === "index.js") return;
-          let command = require(`${dir}/${file}`);
+          let command = require.main.require(`${dir}/${file}`);
           let expressionCheck = await command.expressionCheck(command_name);
           if (expressionCheck.pass){
             map.push(command)
