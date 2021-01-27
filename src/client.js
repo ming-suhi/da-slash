@@ -87,10 +87,34 @@ class Client {
   }
 
   async postCommands() {
+    const client = this.client;
     let commands = await this.commands();
     for (let command of commands) {
-      command[1].post(this.client)
+      command[1].post(client);
     }
+
+    const globalCommands = await client.api.applications(client.user.id).commands.get();
+    for (let command of globalCommands){
+      const match = await this.findCommand(command.name);
+      if (match === undefined) {
+        client.api.applications(client.user.id).commands(command.id).delete()
+        .catch(console.error)
+      };
+    }
+
+    const guilds = await client.guilds.cache;
+    for (let guild of guilds) {
+      const guildCommands = await client.api.applications(client.user.id).guilds(guild[1].id).commands.get().catch(err => {});
+      if (guildCommands != undefined) {
+        for (let command of guildCommands){
+          const match = await this.findCommand(command.name);
+          if (match === undefined) {
+            client.api.applications(client.user.id).guilds(guild[1].id).commands(command.id).delete().catch(console.error)
+          };
+        }
+      };
+    }
+    
     return commands;
   }
 }
