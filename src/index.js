@@ -1,0 +1,10 @@
+const Client = require('./client.js');
+const Command = require('./command.js');
+const GlobalCommand = require('./global-command.js');
+const GuildCommand = require('./guild-command.js');
+const Interaction = require('./interaction.js');
+exports.Client = Client;
+exports.Command = Command;
+exports.GlobalCommand = GlobalCommand;
+exports.GuildCommand = GuildCommand;
+exports.Interaction = Interaction;
